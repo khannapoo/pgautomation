@@ -1,0 +1,217 @@
+<script src="hmac-sha256.js"></script>
+
+<script type="text/javascript">
+	function FnGenerateChecksum()
+	{
+		FnGetDateTime();
+		document.getElementById("transaction.extref").value = FnGenerateExtRefNo();
+		document.getElementById("merchantid").value = document.getElementById("txtmerchantId").value;
+		document.getElementById("clientid").value = document.getElementById("txtclientId").value;
+		document.getElementById("merchantname").value = document.getElementById("txtmerchantname").value;
+		
+		//Clientid|Amount|Extref|Channel|MerchantId|Token|ReturnUrl|TxnTimeStamp|TxnType
+		var sDataString = document.getElementById("clientid").value + "|" + 
+			document.getElementById("transaction.amount").value + "|" + 
+			document.getElementById("transaction.extref").value + "|" +
+			document.getElementById("channel").value + "|" +
+			document.getElementById("merchantid").value + "|" +
+			document.getElementById("token").value + "|" +
+			document.getElementById("returl").value + "|" +
+			document.getElementById("transaction.timestamp").value + "|" +
+			document.getElementById("transaction.txntype").value;
+		
+		var sSeed = document.getElementById("txtChecksumSeed").value;
+		
+		var hash = CryptoJS.HmacSHA256(sDataString, sSeed);
+		document.getElementById("checksum").value = hash;
+		
+			//alert(sDataString);
+		
+		//alert(hash + '   ' + document.getElementById("checksum").value);
+		
+	}
+	
+	function FnGetDateTime() {
+		var newstartDate = new Date();
+		var startDate = newstartDate.toISOString().replace(/[-T:\.Z]/g, "");
+		var startDate = new Date().toISOString().slice(-48).replace(/\D/g,'').slice(0, 14);
+		startDate.toLocaleString();
+		document.getElementById("transaction.timestamp").value = startDate;
+	}
+	
+	function FnGenerateExtRefNo() {
+		var length = 12;
+		var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		var result = '';
+		for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+		return result;
+	}
+	
+	var vMerchants;
+	
+	function FnPolulateMerchantList()
+	{
+		FnPopulateMerchants();
+		var ele = document.getElementById('sel');
+		for (var i = 0; i < vMerchants.length; i++) {
+			// POPULATE SELECT ELEMENT WITH JSON.
+			ele.innerHTML = ele.innerHTML +
+				'<option value="' + vMerchants[i]['merchantid'] + '">' + vMerchants[i]['merchantInfoName'] + '</option>';
+			
+		} 
+	}
+	
+	function FnPopulateMerchants() {
+		// THE JSON ARRAY.
+		
+		var vMerchants_1 = [
+			{
+				"clientid": "10000555",
+				"merchantInfoName": "Uber PP",
+				"merchantid": "100001000020437",
+				"checksumseed":"Pf2Fb0r5htadu3L6ma0mtUphNXzscquG1kyiicOXwXB1iiwqiY8Pbm/q/DzKyPpOlah1-E8O2EeRVa9mKLFjVJqO0xME5PxukzYqD3uLSQ43a7OgcQhyq9drOJkBNm0Ezjcf0OXfTvp6Nywf/NLCnFpDdBU/RdvkV5T4vWfuwekcZB5j8j/EAAKWJYVdRR-mGIBmQmhY0Q-xzvUPbvS99Np7mH0Bmmkw6q9nydL-3X0GiImpbbdLsG2idnabiwxm"
+			},
+			{
+				"clientid": "10000002",
+				"merchantInfoName": "PGPPI",
+				"merchantid": "100001000014146",
+				"checksumseed":"tSLfi8BMxohvWJTCfwd1cZuARH78myF21JAdgdNhvixbj7o6+uIA38WFm7VHQ0aGu8LyQYv8tRPyN+Ba0+nRLuBLZXK4PH2gxkSvJ7Jnhof0NJr3IktRPSUZIQi6hcFZxoElSuOD8KzxCkagJfxT/u4vLeGqdskKl3p46RxJAJvOp7VutGHK2MG1HE7X68E/cKJrEUk7v0vI+kUp2Mfyh7GE8wZ9enYBrkY6olGYS9pLHLv/zGAZzAZVadblK1+3"
+			},
+
+			{
+				"clientid": "10000544",
+				"merchantInfoName": "JioChat PP",
+				"merchantid": "100001000020150",
+				"checksumseed":"AyZH3YNfnHPzpJnWLCgBc4EuGeLfLBMkj6YLXWm7s7QIVU6867F4c0NuYbzpPREbB2BzpGaPbvgMdzUqCd4Kp9H4vFjvPnwHkdrlaNaWyofn4l1m1tyqt3BDK1TMmE1pPrCmuiFU8vlHwect2M9xE23s7Wk6LItWCgNPjSema7yUOHQ4yFXlUYdEHHg1s1EcfpPS4x8lWmnRLOfzXAO1W8BOLyfGlnspK0YxMrtcynnuxnmPXX03swvVd9j91nLc"
+			},
+			{
+				"clientid": "10000594",
+				"merchantInfoName": "IRCTC PP",
+				"merchantid": "100001000020841",
+				"checksumseed":"EsCQTmi6BmfDRBswkiUJCHRbe2618eseGONuciaEkkOiobObvgeffSm3HoDgWbGVJXnRrwuN4plrl8DURzYaG3zNjCEST8mmQGuumhZ2J3798ixMfBBaVwghrx5d8ZHMMhpDPPZoTrxz3Camo6djCt5Rl3PlbJYEgJMw9PRDAJeRViKcrFvPbM7wr62zZYNh3Pnm9icL2jBCkvG6qJUPpptMR8NVEuNE3tXqlPrrloeD0yXdGoZYzMx41QSR4kkV"
+			},
+			{
+				"clientid": "10000689",
+				"merchantInfoName": "PG+API PP",
+				"merchantid": "100001000021926",
+				"checksumseed":"5T9Cxrz4xhuVbyAI9oViThMQKiajZvI2EWpDhh5iggStWL1IKCh2DMss4arIiDJ7YLz6nK1Pm48UDlS3H8ExSDIYInsr7gco9j9ZkeI9j5CcqP63chnq43LkTbh6CqrDkXYbYoltJYHa6NVZtXF0SBtVDOttjydinK9BKkNcQuN11CUMTUAMQSHWz8kunnvXOW0EGhQK7gpLcONa3r1zWu9bOS7lQBzvG4xTBzeiHGSkrWvKWGolqAlJVNpnNR5o"
+			},
+			{
+				"clientid": "10000687",
+				"merchantInfoName": "PPI+Load (API) PP – Super",
+				"merchantid": "100001000021923",
+				"checksumseed":"AMh5VXs4QTTgKLMqhxmR8jvYFAbLt8uJiGuNCfVg20vDXZKi0iyj3P0YHbjpBOohif1Tm9468BdyFZ7bgR8j2mYgPRN2lOmGt1OL2UPdUbtcRkqjiCZOfDSR2eVbsai7weFMWMKiq18JbeBtdnFzWV50pwVwMewhDYRBg8mMC0SCAAT4fjnfXljFkkMgeXP4EhH2EDfhMmXWOz1Vx2eC8ZrtVYSeTCfxhSIILIV1Q7CS5KvPNNaPWlcInrHPQedN"
+			},
+			{
+				"clientid": "10000679",
+				"merchantInfoName": "PG API Super PP",
+				"merchantid": "100001000021913",
+				"checksumseed":"ZbYin7Kk2TJIUDVV1AlqjSTZzUT6XugXujLe4rwLFn62NWUqB50x3xLGIlppJQxwXGfm20BfmP823DyGz16g7sKli3GOq9HJlDDVp4jQN4sLDvWnQI1SfdU3eiKCisGQPsG6atOQJdindmKf7z4HcEFw07xk4hpeg6PK0QceNyZKwewWsWrlhLYYXWpD3qXtpDpnY6zwEezppVxroVD3CZw1fTb5yvb4jz7qoWuiDvF5pjB0N5LNSG74DgfhzRlS"
+			},
+			{
+				"clientid": "10000680",
+				"merchantInfoName": "PPI+Load Sub PP",
+				"merchantid": "100001000021915",
+				"checksumseed":"nk5QWkxHnOnigGmEGx6Tsz7JuZ9DBtu7oHeXbYYkT8IBU5Pesv9up9QV6qi4asrUlk7DirTpWLKMAGyP9SbOIGVjaYF2U50gUg8XGcAUJwZY88LNqIv1eewKpaZk0qzyHfo4LRleQyy9zh3QJuZO9SFWsRlzedaUmh2MNlE738GRkGM2mPTDo9R1WpfXCAUhl8hd13pEwky7iOVM0FVBE9qD9kdlNPTkz9qNqZXN5mIJHoF9EOeaCGkBoAnd9tSn"
+			},
+			{
+				"clientid": "10000681",
+				"merchantInfoName": "PPI+Load+PG Sub2 PP",
+				"merchantid": "100001000021916",
+				"checksumseed":"mrCaqTEBCMclcMmGs5HKDuovbnSYxDKqgZ5s93gRJXHj7wbKRWHBeMk20yOkq6hlxFgiKcA01sne9G3UP2Do9utJ1T0yFN1MtpMviJdcdIs3iLeFWLjYPD6CmBPviRkn5wPlbRhlPvypq2tbhv6ASDoOyyJvOjfsZyEoCLvc0VOPsVwrAlKH2qjcIBNqZE18dSz4TFyonIppVwWYvRGUg9YbXkKQraVwjH7VHrS1AsIK8v6x9iq5Lmx3SUrwiyJN"
+			},
+
+			{
+				"clientid": "10001446",
+				"merchantInfoName": "PP JioEnterprise",
+				"merchantid": "100001000183890",
+				"checksumseed":"CvnVpqYMqKm5rV2j8z5opkWl70XN6WDta42LqjxdTZrcyhGtaArdKnXhjZGjORSsq5HNTP3DopwvTktBzm25TeM7EWXr4e2eGeqxv2OVp53oX9C2fNQcbpKpewC9tIdgfJr2yEonrSp4EmxYRkmtUzppnAFZOveaF0PmyP2NjwloKFgbvx8iTngpMASfNa3Z7UIshw7YLaJtmK2x2Il1rDfYABlDUswlTQaWDZmUFJe4exzT8KGr3HQKMhneWCZH"
+			},
+			{
+				"clientid": "10001342",
+				"merchantInfoName": "PP JioPostpaid",
+				"merchantid": "100001000143659",
+				"checksumseed":"Mx7TP2tiwSe8uStX4mv6i6BVPUr7ObaNkFOOtJshqNnRFqbJs7MfIKZ70mPUUDtMOuoJRY24ieOqtrGtSIXKzqVkugP5vAMEyYtVdRZbtz3WvbIqfK1t00OttD10G0aWBg2U9uea7QuDHzMMrN4XcOIgBbWBYChMOGwLHmxcOBTAVkPSWdlYmPS7cCeUMws5n5RcwXhkZtSV88NKhy3SuNwJfHBcrMRTp0XKjzL6km9HplR5CXU5JCEBdZXrj5oG"
+			},
+			{
+				"clientid": "10001365",
+				"merchantInfoName": "PP JioPrepaid",
+				"merchantid": "100001000147700",
+				"checksumseed":"z3K4ydmZJfqxW6XGttMDQqKuYUlDfNlVdV12PGEGAOFTS1MtJ8hDKKvFT0eMDUC7dv9TOPRAGldHSR3I1pzpjGibqRMc6WvrYELjrpOKh3PcpP4oQQDFgzXUZy6aocAvzySNG3HijZKgyWHLe1Wo1oiRKLqr5sFLhZzgQs6VoiBgnH9OFPS2y6T30Mbyzbm81JhjkC3JyOOKlMbQN85dt28ai3r2xM5HIx75k00iUvfFNx0A5s1AJHb3qClEFCBR"
+			},
+			{
+				"clientid": "10001318",
+				"merchantInfoName": "DirectCard PP",
+				"merchantid": "100001000143229",
+				"checksumseed":"JRksfytL0fU5hoQ9OWMWOWocDqJgQntprWAVqS2eLCpLY9NcLdDWy3wSJ5Ts4zoCPwqe5vcuODX2FJ6c4tRnVCmgVHjgJxWRg5nrbDoh3n8x40VXKe05LALYGNmRlLVWhde6UMRciB5bNaA3EOXvY0OLsvSNlVyVBFCgG3ThrfMcreZV5VxHenhRzsKjiLQ9HK4rTIQWIRVJk8tY7B0vGSvyUOWhK8Rrspmf4TCF11m7SFaUOmaMdyjA33LLYRdR"
+			}
+		];
+		
+		vMerchants =  vMerchants_1;
+	}
+
+	function FnShowDetails(ele) 
+	{			
+		for (var i = 0; i < vMerchants.length; i++)
+		{
+			if(vMerchants[i]['merchantid']==ele.value)
+			{	
+				txtmerchantname.value = vMerchants[i]['merchantInfoName'];
+				txtmerchantId.value = vMerchants[i]['merchantid'];
+				txtclientId.value = vMerchants[i]['clientid'];
+				txtChecksumSeed.value = vMerchants[i]['checksumseed'];
+				
+			}
+		}
+	}
+
+</script>
+
+<html>
+	<H1>Pay through JIO Money</H1> 
+	<form name="payment" onSubmit="FnGenerateChecksum()" method="POST" action="https://testpg.rpay.co.in/reliance-webpay/v1.0/jiopayments">
+
+		<!-- General Info --> 
+		<input type='hidden' id="merchantid" name="merchantid" value=""/> 
+		<input type='hidden' id="clientid" name="clientid" value=""/> 
+		<input type='hidden' id="merchantname" name="merchantname" value=""/> 
+		<input type='hidden' id="channel" name="channel" value="WEB"/> 
+		<input type='hidden' id="returl" name="returl" value="http://10.140.224.103:8080/CentralSimulator/purchaseResponse.jsp"/> 
+		<input type='hidden' id="checksum" name="checksum" value=""/> 
+		<input type='hidden' id="token" name="token" value=""/> 
+
+		<!-- Transaction Info --> 
+		<input type='hidden' id="transaction.extref" name="transaction.extref" value=""/> 
+		<input type='hidden' id="transaction.timestamp" name="transaction.timestamp" value=""/> 
+		<input type='hidden' id="transaction.txntype" name="transaction.txntype" value="PURCHASE"/> 
+		<input type='hidden' id="transaction.amount" name="transaction.amount" value="1.00"/> 
+		<input type='hidden' id="transaction.currency" name="transaction.currency" value="INR"/> 
+		<input type='hidden' id="subscriber.mobilenumber" name="subscriber.mobilenumber" value="7700000020"/> 
+		<input type='hidden' id="transaction.customerid" name="subscriber.customerid" value="ABC123"/> 
+		<input type='hidden' id="transaction.customename" name="subscriber.customename" value="XYZ"/> 
+		<input type='hidden' id="udf1" name="udf1" value="u1"/> 
+		<input type='hidden' id="udf2" name="udf2" value="u2"/> 
+		<input type='hidden' id="udf3" name="udf3" value="u3"/> 
+		<input type='hidden' id="udf4" name="udf4" value="u4"/> 
+		<input type='hidden' id="udf5" name="udf5" value="u5"/> 
+		
+		<body onload="FnPolulateMerchantList()">
+			</br></br>
+			<select id="sel" onchange="FnShowDetails(this)">
+				<option value="">-- Select Merchant --</option>
+			</select>
+			
+			</br>
+			</br>Merchant Name :<input type="text" id="txtmerchantname" value="">
+			</br></br>Client Id :<input type="text" id="txtclientId" value="">
+			</br></br>Merchant Id : <input type="text" id="txtmerchantId" value="">
+			</br></br>ChecksumSeed : <input type="text" id="txtChecksumSeed" value="">		
+			
+			</br></br><input type="submit" value="Jio Pay"/>
+		</body>
+				
+		<style type="text/css">
+			#txtChecksumSeed { width: 90%; }
+		</style>
+	</form>
+</html>
